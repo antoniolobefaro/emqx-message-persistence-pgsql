@@ -34,24 +34,13 @@
 %%--------------------------------------------------------------------
 
 start(_StartType, _StartArgs) ->
-    {ok, Sup} = emqx_message_persistence_pgsql_sup:start_link(),
-    if_enabled(auth_query, fun(AuthQuery) ->
-        SuperQuery = parse_query(super_query, application:get_env(?APP, super_query, undefined)),
-        {ok, HashType}  = application:get_env(?APP, password_hash),
-        AuthEnv = #{auth_query => AuthQuery,
-                    super_query => SuperQuery,
-                    hash_type => HashType},
-        ok = emqx_message_persistence_pgsql:register_metrics(),
-        ok = emqx:hook('client.authenticate', fun emqx_message_persistence_pgsql:check/3, [AuthEnv])
-    end),
-    if_enabled(acl_query, fun(AclQuery) ->
-        ok = emqx_message_persistence_acl_pgsql:register_metrics(),
-        ok = emqx:hook('client.check_acl', fun emqx_message_persistence_acl_pgsql:check_acl/5, [#{acl_query => AclQuery}])
-    end),
+    io:format("emqx_persistence_pgsql ~n"),
+    emqx_message_persistence_pgsql:load(application:get_all_env()),
     {ok, Sup}.
 
 stop(_State) ->
     ok = emqx:unhook('client.authenticate', fun emqx_message_persistence_pgsql:check/3),
+    emqx_message_persistence_pgsql:unload(),
     ok = emqx:unhook('client.check_acl', fun emqx_message_persistence_acl_pgsql:check_acl/5).
 
 if_enabled(Par, Fun) ->

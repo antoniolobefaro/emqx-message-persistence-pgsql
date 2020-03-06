@@ -1,67 +1,67 @@
 %%-*- mode: erlang -*-
 %% emqx_auth_pgsl config mapping
 
-{mapping, "auth.pgsql.server", "emqx_message_persistence_pgsql.server", [
+{mapping, "persmessage.pgsql.server", "emqx_message_persistence_pgsql.server", [
   {default, {"127.0.0.1", 5432}},
   {datatype, [integer, ip, string]}
 ]}.
 
-{mapping, "auth.pgsql.pool", "emqx_message_persistence_pgsql.server", [
+{mapping, "persmessage.pgsql.pool", "emqx_message_persistence_pgsql.server", [
   {default, 8},
   {datatype, integer}
 ]}.
 
-{mapping, "auth.pgsql.database", "emqx_message_persistence_pgsql.server", [
+{mapping, "persmessage.pgsql.database", "emqx_message_persistence_pgsql.server", [
   {datatype, string}
 ]}.
 
-{mapping, "auth.pgsql.username", "emqx_message_persistence_pgsql.server", [
+{mapping, "persmessage.pgsql.username", "emqx_message_persistence_pgsql.server", [
   {default, ""},
   {datatype, string}
 ]}.
 
-{mapping, "auth.pgsql.password", "emqx_message_persistence_pgsql.server", [
+{mapping, "persmessage.pgsql.password", "emqx_message_persistence_pgsql.server", [
   {default, ""},
   {datatype, string}
 ]}.
 
-{mapping, "auth.pgsql.encoding", "emqx_message_persistence_pgsql.server", [
+{mapping, "persmessage.pgsql.encoding", "emqx_message_persistence_pgsql.server", [
   {default, utf8},
   {datatype, atom}
 ]}.
 
-{mapping, "auth.pgsql.ssl", "emqx_message_persistence_pgsql.server", [
+{mapping, "persmessage.pgsql.ssl", "emqx_message_persistence_pgsql.server", [
   {default, false},
   {datatype, {enum, [true, false]}}
 ]}.
 
-{mapping, "auth.pgsql.ssl_opts.keyfile", "emqx_message_persistence_pgsql.server", [
+{mapping, "persmessage.pgsql.ssl_opts.keyfile", "emqx_message_persistence_pgsql.server", [
   {datatype, string}
 ]}.
 
-{mapping, "auth.pgsql.ssl_opts.certfile", "emqx_message_persistence_pgsql.server", [
+{mapping, "persmessage.pgsql.ssl_opts.certfile", "emqx_message_persistence_pgsql.server", [
   {datatype, string}
 ]}.
 
-{mapping, "auth.pgsql.ssl_opts.cacertfile", "emqx_message_persistence_pgsql.server", [
+{mapping, "persmessage.pgsql.ssl_opts.cacertfile", "emqx_message_persistence_pgsql.server", [
   {datatype, string}
 ]}.
 
 {translation, "emqx_message_persistence_pgsql.server", fun(Conf) ->
   {PgHost, PgPort} =
-  case cuttlefish:conf_get("auth.pgsql.server", Conf) of
+  case cuttlefish:conf_get("persmessage.pgsql.server", Conf) of
     {Ip, Port} -> {Ip, Port};
     S          -> case string:tokens(S, ":") of
                     [Domain]       -> {Domain, 5432};
                     [Domain, Port] -> {Domain, list_to_integer(Port)}
                   end
     end,
-  Pool = cuttlefish:conf_get("auth.pgsql.pool", Conf),
-  Username = cuttlefish:conf_get("auth.pgsql.username", Conf),
-  Passwd = cuttlefish:conf_get("auth.pgsql.password", Conf, ""),
-  DB = cuttlefish:conf_get("auth.pgsql.database", Conf),
-  Encoding = cuttlefish:conf_get("auth.pgsql.encoding", Conf),
-  Ssl = cuttlefish:conf_get("auth.pgsql.ssl", Conf),
+  Pool = cuttlefish:conf_get("persmessage.pgsql.pool", Conf),
+  Username = cuttlefish:conf_get("persmessage.pgsql.username", Conf),
+  Passwd = cuttlefish:conf_get("persmessage.pgsql.password", Conf, ""),
+  DB = cuttlefish:conf_get("persmessage.pgsql.database", Conf),
+  Encoding = cuttlefish:conf_get("persmessage.pgsql.encoding", Conf),
+  Ssl = cuttlefish:conf_get("persmessage.pgsql.ssl", Conf),
 
   Filter  = fun(Opts) -> [{K, V} || {K, V} <- Opts, V =/= undefined] end,
   SslOpts = fun(Prefix) ->
@@ -78,39 +78,39 @@
    {database, DB},
    {encoding, Encoding},
    {ssl, Ssl},
-   {ssl_opts, SslOpts("auth.pgsql.ssl_opts")}]
+   {ssl_opts, SslOpts("persmessage.pgsql.ssl_opts")}]
 end}.
 
-{mapping, "auth.pgsql.auth_query", "emqx_message_persistence_pgsql.auth_query", [
+{mapping, "persmessage.pgsql.auth_query", "emqx_message_persistence_pgsql.auth_query", [
   {datatype, string}
 ]}.
 
-{mapping, "auth.pgsql.password_hash", "emqx_message_persistence_pgsql.password_hash", [
+{mapping, "persmessage.pgsql.password_hash", "emqx_message_persistence_pgsql.password_hash", [
   {datatype, string}
 ]}.
 
-{mapping, "auth.pgsql.pbkdf2_macfun", "emqx_message_persistence_pgsql.pbkdf2_macfun", [
+{mapping, "persmessage.pgsql.pbkdf2_macfun", "emqx_message_persistence_pgsql.pbkdf2_macfun", [
   {datatype, atom}
 ]}.
 
-{mapping, "auth.pgsql.pbkdf2_iterations", "emqx_message_persistence_pgsql.pbkdf2_iterations", [
+{mapping, "persmessage.pgsql.pbkdf2_iterations", "emqx_message_persistence_pgsql.pbkdf2_iterations", [
   {datatype, integer}
 ]}.
 
-{mapping, "auth.pgsql.pbkdf2_dklen", "emqx_message_persistence_pgsql.pbkdf2_dklen", [
+{mapping, "persmessage.pgsql.pbkdf2_dklen", "emqx_message_persistence_pgsql.pbkdf2_dklen", [
   {datatype, integer}
 ]}.
 
-{mapping, "auth.pgsql.super_query", "emqx_message_persistence_pgsql.super_query", [
+{mapping, "persmessage.pgsql.super_query", "emqx_message_persistence_pgsql.super_query", [
   {datatype, string}
 ]}.
 
-{mapping, "auth.pgsql.acl_query", "emqx_message_persistence_pgsql.acl_query", [
+{mapping, "persmessage.pgsql.acl_query", "emqx_message_persistence_pgsql.acl_query", [
   {datatype, string}
 ]}.
 
 {translation, "emqx_message_persistence_pgsql.password_hash", fun(Conf) ->
-  HashValue = cuttlefish:conf_get("auth.pgsql.password_hash", Conf),
+  HashValue = cuttlefish:conf_get("persmessage.pgsql.password_hash", Conf),
   case string:tokens(HashValue, ",") of
     [Hash]           -> list_to_atom(Hash);
     [Prefix, Suffix] -> {list_to_atom(Prefix), list_to_atom(Suffix)};

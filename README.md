@@ -19,52 +19,52 @@ File: etc/emqx_message_persistence_pgsql.conf
 ## Value: Port | IP:Port
 ##
 ## Examples: 5432, 127.0.0.1:5432, localhost:5432
-auth.pgsql.server = 127.0.0.1:5432
+persmessage.pgsql.server = 127.0.0.1:5432
 
 ## PostgreSQL pool size.
 ##
 ## Value: Number
-auth.pgsql.pool = 8
+persmessage.pgsql.pool = 8
 
 ## PostgreSQL username.
 ##
 ## Value: String
-auth.pgsql.username = root
+persmessage.pgsql.username = root
 
 ## PostgreSQL password.
 ##
 ## Value: String
-## auth.pgsql.password =
+## persmessage.pgsql.password =
 
 ## PostgreSQL database.
 ##
 ## Value: String
-auth.pgsql.database = mqtt
+persmessage.pgsql.database = mqtt
 
 ## PostgreSQL database encoding.
 ##
 ## Value: String
-auth.pgsql.encoding = utf8
+persmessage.pgsql.encoding = utf8
 
 ## Whether to enable SSL connection.
 ##
 ## Value: true | false
-auth.pgsql.ssl = false
+persmessage.pgsql.ssl = false
 
 ## SSL keyfile.
 ##
 ## Value: File
-## auth.pgsql.ssl_opts.keyfile =
+## persmessage.pgsql.ssl_opts.keyfile =
 
 ## SSL certfile.
 ##
 ## Value: File
-## auth.pgsql.ssl_opts.certfile =
+## persmessage.pgsql.ssl_opts.certfile =
 
 ## SSL cacertfile.
 ##
 ## Value: File
-## auth.pgsql.ssl_opts.cacertfile =
+## persmessage.pgsql.ssl_opts.cacertfile =
 
 ## Authentication query.
 ##
@@ -74,25 +74,25 @@ auth.pgsql.ssl = false
 ##  - %u: username
 ##  - %c: clientid
 ##
-auth.pgsql.auth_query = select password from mqtt_user where username = '%u' limit 1
+persmessage.pgsql.auth_query = select password from mqtt_user where username = '%u' limit 1
 
 ## Password hash.
 ##
 ## Value: plain | md5 | sha | sha256 | bcrypt
-auth.pgsql.password_hash = sha256
+persmessage.pgsql.password_hash = sha256
 
 ## sha256 with salt prefix
-## auth.pgsql.password_hash = salt,sha256
+## persmessage.pgsql.password_hash = salt,sha256
 
 ## sha256 with salt suffix
-## auth.pgsql.password_hash = sha256,salt
+## persmessage.pgsql.password_hash = sha256,salt
 
 ## bcrypt with salt prefix
-## auth.pgsql.password_hash = salt,bcrypt
+## persmessage.pgsql.password_hash = salt,bcrypt
 
 ## pbkdf2 with macfun iterations dklen
 ## macfun: md4, md5, ripemd160, sha, sha224, sha256, sha384, sha512
-## auth.pgsql.password_hash = pbkdf2,sha256,1000,20
+## persmessage.pgsql.password_hash = pbkdf2,sha256,1000,20
 
 ## Superuser query.
 ##
@@ -101,7 +101,7 @@ auth.pgsql.password_hash = sha256
 ## Variables:
 ##  - %u: username
 ##  - %c: clientid
-auth.pgsql.super_query = select is_superuser from mqtt_user where username = '%u' limit 1
+persmessage.pgsql.super_query = select is_superuser from mqtt_user where username = '%u' limit 1
 
 ## ACL query. Comment this query, the ACL will be disabled.
 ##
@@ -111,7 +111,7 @@ auth.pgsql.super_query = select is_superuser from mqtt_user where username = '%u
 ##  - %a: ipaddress
 ##  - %u: username
 ##  - %c: clientid
-auth.pgsql.acl_query = select allow, ipaddr, username, clientid, access, topic from mqtt_acl where ipaddr = '%a' or username = '%u' or username = '$all' or clientid = '%c'
+persmessage.pgsql.acl_query = select allow, ipaddr, username, clientid, access, topic from mqtt_acl where ipaddr = '%a' or username = '%u' or username = '$all' or clientid = '%c'
 ```
 
 Load Plugin

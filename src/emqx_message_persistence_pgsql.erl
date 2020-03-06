@@ -21,6 +21,7 @@
 -include_lib("emqx/include/emqx.hrl").
 -include_lib("emqx/include/logger.hrl").
 
+-export([load/1, unload/0]).
 -export([ register_metrics/0, check/3, description/0]).
 -export([on_message_publish/2]).
 
@@ -147,6 +148,9 @@ check_if_exist(Ind, Lista) ->
     Length < Ind  -> ""
   end.
 
+
+unload() ->
+    emqx:unhook('message.publish', fun ?MODULE:on_message_publish/2).
 
 description() -> "Authentication with PostgreSQL".
 

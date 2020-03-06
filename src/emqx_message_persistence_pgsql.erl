@@ -14,17 +14,20 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emqx_auth_pgsql).
+-module(emqx_message_persistence_pgsql).
 
--include("emqx_auth_pgsql.hrl").
+-include("emqx_message_persistence_pgsql.hrl").
 
 -include_lib("emqx/include/emqx.hrl").
 -include_lib("emqx/include/logger.hrl").
 
--export([ register_metrics/0
-        , check/3
-        , description/0
-        ]).
+-export([ register_metrics/0, check/3, description/0]).
+-export([on_message_publish/2]).
+
+%% Called when the plugin application start
+load(Env) ->
+  emqx:hook('message.publish', fun ?MODULE:on_message_publish/2, [Env]).
+
 
 -spec(register_metrics() -> ok).
 register_metrics() ->
@@ -38,7 +41,7 @@ check(ClientInfo = #{password := Password}, AuthResult,
       #{auth_query  := {AuthSql, AuthParams},
         super_query := SuperQuery,
         hash_type   := HashType}) ->
-    CheckPass = case emqx_auth_pgsql_cli:equery(AuthSql, AuthParams, ClientInfo) of
+    CheckPass = case emqx_message_persistence_pgsql_cli:equery(AuthSql, AuthParams, ClientInfo) of
                     {ok, _, [Record]} ->
                         check_pass(erlang:append_element(Record, Password), HashType);
                     {ok, _, []} ->
@@ -69,7 +72,7 @@ check(ClientInfo = #{password := Password}, AuthResult,
 is_superuser(undefined, _Client) ->
     false;
 is_superuser({SuperSql, Params}, ClientInfo) ->
-    case emqx_auth_pgsql_cli:equery(SuperSql, Params, ClientInfo) of
+    case emqx_message_persistence_pgsql_cli:equery(SuperSql, Params, ClientInfo) of
         {ok, [_Super], [{true}]} ->
             true;
         {ok, [_Super], [_False]} ->
@@ -85,6 +88,65 @@ check_pass(Password, HashType) ->
         ok -> ok;
         {error, _Reason} -> {error, not_authorized}
     end.
+
+
+%% Transform message and return
+on_message_publish(Message = #message{topic = <<"$SYS/", _/binary>>}, _Env) ->
+  {ok, Message};
+
+on_message_publish(Message, _Env) ->
+    io:format("Publish ~s~n", [emqx_message:format(Message)]),
+    Id = case is_binary(Message#message.id) of
+        true -> binary:list_to_bin(integer_to_list(binary:decode_unsigned(Message#message.id)));
+        false -> <<"">>
+    end,
+    Topics = string:split(Message#message.topic, "/", all),
+    Topicsfree = lists:delete("",Topics),
+    Topicsfreeall = lists:delete(<<>>,Topicsfree),
+%%    MessageMap = #{
+%%    <<"id">> => Id,
+    Qos = integer_to_binary(Message#message.qos),
+    From = Message#message.from,
+    Flags = Message#message.flags,
+%%  Headers = Message#message.headers,
+    Topic = Message#message.topic,
+    T1 = check_if_exist(1,Topicsfreeall),
+    T2 = check_if_exist(2,Topicsfreeall),
+    T3 = check_if_exist(3,Topicsfreeall),
+    T4 = check_if_exist(4,Topicsfreeall),
+    T5 = check_if_exist(5,Topicsfreeall),
+    T6 = check_if_exist(6,Topicsfreeall),
+    T7 = check_if_exist(7,Topicsfreeall),
+    T8 = check_if_exist(8,Topicsfreeall),
+    T9 = check_if_exist(9,Topicsfreeall),
+    Payload = Message#message.payload,
+%%    <<"timestamp">> => integer_to_binary(calendar:datetime_to_gregorian_seconds(calendar:now_to_universal_time(Message#message.timestamp))),
+    Ts = Message#message.timestamp,             
+%%    Status = "publish",
+    if 
+        is_number(Payload) -> { Val, rest } = string:to_float(Payload);
+        true -> Val = "NULL"
+    end,
+    Sql = "INSERT INTO messages (t1,t2,t3,t4,t5,t6,t7,t8,t9, ts, payload,topic,from,qos,flag) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15, $16)",
+    Params = [T1,T2,T3,T4,T5,T6,T7,T8,T9, Ts, Payload, Topic, From, Qos, Flags, Val],
+    case emqx_message_persistence_pgsql_cli:equery(Sql, Params) of
+        {ok, [_Super], [{true}]} ->
+            true;
+        {ok, [_Super], [_False]} ->
+            false;
+        {ok, [_Super], []} ->
+            false;
+        {error, _Error} ->
+            false
+    end.
+
+check_if_exist(Ind, Lista) ->
+  Length = length(Lista),
+  if 
+    Length >= Ind -> lists:nth(Ind, Lista);
+    Length < Ind  -> ""
+  end.
+
 
 description() -> "Authentication with PostgreSQL".
 

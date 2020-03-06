@@ -1,28 +1,20 @@
 
-CREATE TABLE mqtt_user (
+CREATE TABLE messages (
   id SERIAL primary key,
-  is_superuser boolean,
-  username character varying(100),
-  password character varying(100),
-  salt character varying(40)
+  ts timestamp,
+  t1 character varying(50),
+  t2 character varying(50),
+  t3 character varying(50),
+  t4 character varying(50),
+  t5 character varying(50),
+  t6 character varying(50),
+  t7 character varying(50),
+  t8 character varying(50),
+  t9 character varying(50),
+  payload character varying(200),
+  from character varying(200),
+  flag character varying(200),
+  topic character varying(200),
+  qos integer,
+  val float
 );
-
-CREATE TABLE mqtt_acl (
-  id SERIAL primary key,
-  allow integer,
-  ipaddr character varying(60),
-  username character varying(100),
-  clientid character varying(100),
-  access  integer,
-  topic character varying(100)
-);
-
-INSERT INTO mqtt_acl (id, allow, ipaddr, username, clientid, access, topic)
-VALUES
-	(1,1,NULL,'$all',NULL,2,'#'),
-	(2,0,NULL,'$all',NULL,1,'$SYS/#'),
-	(3,0,NULL,'$all',NULL,1,'eq #'),
-	(5,1,'127.0.0.1',NULL,NULL,2,'$SYS/#'),
-	(6,1,'127.0.0.1',NULL,NULL,2,'#'),
-	(7,1,NULL,'dashboard',NULL,1,'$SYS/#');
-

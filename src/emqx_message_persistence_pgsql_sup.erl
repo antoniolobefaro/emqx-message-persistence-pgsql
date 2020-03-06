@@ -14,11 +14,11 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emqx_auth_pgsql_sup).
+-module(emqx_message_persistence_pgsql_sup).
 
 -behaviour(supervisor).
 
--include("emqx_auth_pgsql.hrl").
+-include("emqx_message_persistence_pgsql.hrl").
 
 %% API
 -export([start_link/0]).

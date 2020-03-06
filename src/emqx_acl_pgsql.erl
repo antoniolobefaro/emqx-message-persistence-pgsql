@@ -16,7 +16,7 @@
 
 -module(emqx_acl_pgsql).
 
--include("emqx_auth_pgsql.hrl").
+-include("emqx_message_persistence_pgsql.hrl").
 -include_lib("emqx/include/emqx.hrl").
 -include_lib("emqx/include/logger.hrl").
 

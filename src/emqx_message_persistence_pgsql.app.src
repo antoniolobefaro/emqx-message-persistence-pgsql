@@ -1,14 +1,14 @@
-{application, emqx_auth_pgsql,
+{application, emqx_message_persistence_pgsql,
  [{description, "EMQ X Authentication/ACL with PostgreSQL"},
   {vsn, "git"},
   {modules, []},
-  {registered, [emqx_auth_pgsql_sup]},
+  {registered, [emqx_message_persistence_pgsql_sup]},
   {applications, [kernel,stdlib,epgsql,ecpool,emqx_passwd]},
-  {mod, {emqx_auth_pgsql_app,[]}},
+  {mod, {emqx_message_persistence_pgsql,[]}},
   {env, []},
   {licenses, ["Apache-2.0"]},
   {maintainers, ["EMQ X Team <contact@emqx.io>"]},
   {links, [{"Homepage", "https://emqx.io/"},
-           {"Github", "https://github.com/emqx/emqx-auth-pgsql"}
+           {"Github", "https://github.com/antoniolobefaro/emqx-message-persistence-pgsql"}
           ]}
  ]}.

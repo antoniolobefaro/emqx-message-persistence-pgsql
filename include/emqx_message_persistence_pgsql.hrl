@@ -1,4 +1,4 @@
--define(APP, emqx_auth_pgsql).
+-define(APP, emqx_message_persistence_pgsql).
 
 -record(auth_metrics, {
         success = 'client.auth.success',

@@ -14,15 +14,15 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emqx_auth_pgsql_app).
+-module(emqx_message_persistence_pgsql_app).
 
 -behaviour(application).
 
 -emqx_plugin(auth).
 
--include("emqx_auth_pgsql.hrl").
+-include("emqx_message_persistence_pgsql.hrl").
 
--import(emqx_auth_pgsql_cli, [parse_query/2]).
+-import(emqx_message_persistence_pgsql_cli, [parse_query/2]).
 
 %% Application callbacks
 -export([ start/2
@@ -34,15 +34,15 @@
 %%--------------------------------------------------------------------
 
 start(_StartType, _StartArgs) ->
-    {ok, Sup} = emqx_auth_pgsql_sup:start_link(),
+    {ok, Sup} = emqx_message_persistence_pgsql_sup:start_link(),
     if_enabled(auth_query, fun(AuthQuery) ->
         SuperQuery = parse_query(super_query, application:get_env(?APP, super_query, undefined)),
         {ok, HashType}  = application:get_env(?APP, password_hash),
         AuthEnv = #{auth_query => AuthQuery,
                     super_query => SuperQuery,
                     hash_type => HashType},
-        ok = emqx_auth_pgsql:register_metrics(),
-        ok = emqx:hook('client.authenticate', fun emqx_auth_pgsql:check/3, [AuthEnv])
+        ok = emqx_message_persistence_pgsql:register_metrics(),
+        ok = emqx:hook('client.authenticate', fun emqx_message_persistence_pgsql:check/3, [AuthEnv])
     end),
     if_enabled(acl_query, fun(AclQuery) ->
         ok = emqx_acl_pgsql:register_metrics(),
@@ -51,7 +51,7 @@ start(_StartType, _StartArgs) ->
     {ok, Sup}.
 
 stop(_State) ->
-    ok = emqx:unhook('client.authenticate', fun emqx_auth_pgsql:check/3),
+    ok = emqx:unhook('client.authenticate', fun emqx_message_persistence_pgsql:check/3),
     ok = emqx:unhook('client.check_acl', fun emqx_acl_pgsql:check_acl/5).
 
 if_enabled(Par, Fun) ->

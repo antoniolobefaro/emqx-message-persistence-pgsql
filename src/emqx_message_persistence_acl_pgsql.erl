@@ -14,7 +14,7 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emqx_acl_pgsql).
+-module(emqx_message_persistence_acl_pgsql).
 
 -include("emqx_message_persistence_pgsql.hrl").
 -include_lib("emqx/include/emqx.hrl").

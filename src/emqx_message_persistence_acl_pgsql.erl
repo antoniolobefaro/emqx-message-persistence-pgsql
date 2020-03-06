@@ -41,7 +41,7 @@ check_acl(ClientInfo, PubSub, Topic, NoMatchAction, State) ->
 do_check_acl(#{username := <<$$, _/binary>>}, _PubSub, _Topic, _NoMatchAction, _State) ->
     ok;
 do_check_acl(ClientInfo, PubSub, Topic, _NoMatchAction, #{acl_query := {AclSql, AclParams}}) ->
-    case emqx_auth_pgsql_cli:equery(AclSql, AclParams, ClientInfo) of
+    case emqx_message_persistence_pgsql_cli:equery(AclSql, AclParams, ClientInfo) of
         {ok, _, []} -> ok;
         {ok, _, Rows} ->
             Rules = filter(PubSub, compile(Rows)),

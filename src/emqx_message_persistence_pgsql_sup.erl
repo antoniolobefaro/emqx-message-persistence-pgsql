@@ -32,6 +32,6 @@ start_link() ->
 init([]) ->
     %% PgSQL Connection Pool
     {ok, Opts} = application:get_env(?APP, server),
-    PoolSpec = ecpool:pool_spec(?APP, ?APP, emqx_auth_pgsql_cli, Opts),
+    PoolSpec = ecpool:pool_spec(?APP, ?APP, emqx_message_persistence_pgsql_cli, Opts),
     {ok, {{one_for_one, 10, 100}, [PoolSpec]}}.
 

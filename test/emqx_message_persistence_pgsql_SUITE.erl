@@ -14,13 +14,13 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emqx_auth_pgsql_SUITE).
+-module(emqx_message_persistence_pgsql_SUITE).
 
 -compile(export_all).
 
--define(POOL, emqx_auth_pgsql).
+-define(POOL, emqx_message_persistence_pgsql).
 
--define(APP, emqx_auth_pgsql).
+-define(APP, emqx_message_persistence_pgsql).
 
 -include_lib("emqx/include/emqx.hrl").
 
@@ -67,20 +67,20 @@
                      (7, false, 'bcrypt', '$2y$16$rEVsDarhgHYB0TGnDFJzyu5f.T.Ha9iXMTk9J36NCMWWM7O16qyaK', 'salt')").
 
 all() ->
-    [{group, emqx_auth_pgsql_auth},
-     {group, emqx_auth_pgsql_acl},
-     {group, emqx_auth_pgsql}
+    [{group, emqx_message_persistence_pgsql_auth},
+     {group, emqx_message_persistence_pgsql_acl},
+     {group, emqx_message_persistence_pgsql}
      %{group, auth_pgsql_config}
     ].
 
 groups() ->
-    [{emqx_auth_pgsql_auth, [sequence], [check_auth]},
-     {emqx_auth_pgsql_acl, [sequence], [check_acl, acl_super]},
-     {emqx_auth_pgsql, [sequence], [comment_config, placeholders]},
+    [{emqx_message_persistence_pgsql_auth, [sequence], [check_auth]},
+     {emqx_message_persistence_pgsql_acl, [sequence], [check_acl, acl_super]},
+     {emqx_message_persistence_pgsql, [sequence], [comment_config, placeholders]},
      {auth_pgsql_config, [sequence], [server_config]}].
 
 init_per_suite(Config) ->
-    emqx_ct_helpers:start_apps([emqx, emqx_auth_pgsql], fun set_special_configs/1),
+    emqx_ct_helpers:start_apps([emqx, emqx_message_persistence_pgsql], fun set_special_configs/1),
     init_auth_(),
     init_acl_(),
     Config.
@@ -88,7 +88,7 @@ init_per_suite(Config) ->
 end_per_suite(_Config) ->
     drop_auth_(),
     drop_acl_(),
-    application:stop(emqx_auth_pgsql),
+    application:stop(emqx_message_persistence_pgsql),
     application:stop(emqx).
 
 set_special_configs(emqx) ->
@@ -99,7 +99,7 @@ set_special_configs(emqx) ->
     application:set_env(emqx, enable_acl_cache, false),
     application:set_env(emqx, plugins_loaded_file,
                         emqx_ct_helpers:deps_path(emqx, "test/emqx_SUITE_data/loaded_plugins"));
-set_special_configs(emqx_auth_pgsql) ->
+set_special_configs(emqx_message_persistence_pgsql) ->
     {ok, Server} = application:get_env(?APP, server),
     application:set_env(?APP, server,
                         lists:keyreplace(password,
@@ -238,13 +238,13 @@ server_config(_) ->
                      "ssl_opts.cacertfile=key/cafile",
                      "password_hash=salt,sha256"],
     lists:foreach(fun set_cmd/1, SetConfigKeys),
-    {ok, E} =  application:get_env(emqx_auth_pgsql, server),
-    {ok, Hash} =  application:get_env(emqx_auth_pgsql, password_hash),
+    {ok, E} =  application:get_env(emqx_message_persistence_pgsql, server),
+    {ok, Hash} =  application:get_env(emqx_message_persistence_pgsql, password_hash),
     ?assertEqual(lists:sort(I), lists:sort(E)),
     ?assertEqual({salt,sha256}, Hash).
 
 set_cmd(Key) ->
-    emqx_cli_config:run(["config", "set", string:join(["authenticate.pgsql", Key], "."), "--app=emqx_auth_pgsql"]).
+    emqx_cli_config:run(["config", "set", string:join(["authenticate.pgsql", Key], "."), "--app=emqx_message_persistence_pgsql"]).
 
 init_acl_() ->
     {ok, Pid} = ecpool_worker:client(gproc_pool:pick_worker({ecpool, ?POOL})),

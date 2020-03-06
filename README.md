@@ -1,4 +1,4 @@
-emqx_auth_pgsql
+emqx_message_persistence_pgsql
 ===============
 
 Authentication/ACL with PostgreSQL Database.
@@ -11,7 +11,7 @@ make && make tests
 Configuration
 -------------
 
-File: etc/emqx_auth_pgsql.conf
+File: etc/emqx_message_persistence_pgsql.conf
 
 ```
 ## PostgreSQL server address.
@@ -117,7 +117,7 @@ auth.pgsql.acl_query = select allow, ipaddr, username, clientid, access, topic f
 Load Plugin
 -----------
 
-./bin/emqx_ctl plugins load emqx_auth_pgsql
+./bin/emqx_ctl plugins load emqx_message_persistence_pgsql
 
 Auth Table
 ----------

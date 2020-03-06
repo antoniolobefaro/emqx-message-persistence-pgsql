@@ -4,7 +4,7 @@ services:
   erlang:
     image: erlang:21.3
     volumes:
-      - ./:/emqx_auth_pgsql
+      - ./:/emqx_message_persistence_pgsql
     networks:
       - emqx-bridge
     depends_on:

@@ -45,14 +45,14 @@ start(_StartType, _StartArgs) ->
         ok = emqx:hook('client.authenticate', fun emqx_message_persistence_pgsql:check/3, [AuthEnv])
     end),
     if_enabled(acl_query, fun(AclQuery) ->
-        ok = emqx_acl_pgsql:register_metrics(),
-        ok = emqx:hook('client.check_acl', fun emqx_acl_pgsql:check_acl/5, [#{acl_query => AclQuery}])
+        ok = emqx_message_persistence_acl_pgsql:register_metrics(),
+        ok = emqx:hook('client.check_acl', fun emqx_message_persistence_acl_pgsql:check_acl/5, [#{acl_query => AclQuery}])
     end),
     {ok, Sup}.
 
 stop(_State) ->
     ok = emqx:unhook('client.authenticate', fun emqx_message_persistence_pgsql:check/3),
-    ok = emqx:unhook('client.check_acl', fun emqx_acl_pgsql:check_acl/5).
+    ok = emqx:unhook('client.check_acl', fun emqx_message_persistence_acl_pgsql:check_acl/5).
 
 if_enabled(Par, Fun) ->
     case application:get_env(?APP, Par) of

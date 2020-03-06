@@ -22,12 +22,8 @@
 
 -include("emqx_message_persistence_pgsql.hrl").
 
--import(emqx_message_persistence_pgsql_cli, [parse_query/2]).
-
 %% Application callbacks
--export([ start/2
-        , stop/1
-        ]).
+-export([ start/2, stop/1]).
 
 %%--------------------------------------------------------------------
 %% Application callbacks
@@ -40,9 +36,9 @@ start(_StartType, _StartArgs) ->
     {ok, Sup}.
 
 stop(_State) ->
-    ok = emqx:unhook('client.authenticate', fun emqx_message_persistence_pgsql:check/3),
-    emqx_message_persistence_pgsql:unload(),
-    ok = emqx:unhook('client.check_acl', fun emqx_message_persistence_acl_pgsql:check_acl/5).
+    emqx_message_persistence_pgsql:unload().
+%    ok = emqx:unhook('client.authenticate', fun emqx_message_persistence_pgsql:check/3),
+%    ok = emqx:unhook('client.check_acl', fun emqx_message_persistence_acl_pgsql:check_acl/5).
 
 %%if_enabled(Par, Fun) ->
 %%    case application:get_env(?APP, Par) of

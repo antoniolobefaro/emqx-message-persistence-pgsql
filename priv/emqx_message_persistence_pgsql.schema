@@ -1,5 +1,5 @@
 %%-*- mode: erlang -*-
-%% emqx_auth_pgsl config mapping
+%% emqx_message_persistence_pgsql config mapping
 
 {mapping, "auth.pgsql.server", "emqx_message_persistence_pgsql.server", [
   {default, {"127.0.0.1", 5432}},

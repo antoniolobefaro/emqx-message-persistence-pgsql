@@ -33,5 +33,5 @@ init([]) ->
     %% PgSQL Connection Pool
     {ok, Opts} = application:get_env(?APP, server),
     PoolSpec = ecpool:pool_spec(?APP, ?APP, emqx_message_persistence_pgsql_cli, Opts),
-    {ok, {{one_for_all, 0, 1}, [PoolSpec]}}.
+    {ok, {{one_for_all, 10, 100}, [PoolSpec]}}.
 

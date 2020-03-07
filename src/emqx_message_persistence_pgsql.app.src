@@ -4,7 +4,7 @@
   {modules, []},
   {registered, [emqx_message_persistence_pgsql_sup]},
   {applications, [kernel,stdlib,epgsql,ecpool,emqx_passwd]},
-  {mod, {emqx_message_persistence_pgsql,[]}},
+  {mod, {emqx_message_persistence_pgsql_app,[]}},
   {env, []},
   {licenses, ["Apache-2.0"]},
   {maintainers, ["EMQ X Team <contact@emqx.io>"]},

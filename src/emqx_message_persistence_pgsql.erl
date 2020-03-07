@@ -21,14 +21,10 @@
 -include_lib("emqx/include/emqx.hrl").
 -include_lib("emqx/include/logger.hrl").
 
--export([load/1, unload/0]).
 -export([ register_metrics/0, check/3, description/0]).
 -export([on_message_publish/2]).
 
 %% Called when the plugin application start
-load(Env) ->
-  emqx:hook('message.publish', fun ?MODULE:on_message_publish/2, [Env]).
-
 
 -spec(register_metrics() -> ok).
 register_metrics() ->
@@ -147,10 +143,6 @@ check_if_exist(Ind, Lista) ->
     Length >= Ind -> lists:nth(Ind, Lista);
     Length < Ind  -> ""
   end.
-
-
-unload() ->
-    emqx:unhook('message.publish', fun ?MODULE:on_message_publish/2).
 
 description() -> "Authentication with PostgreSQL".
 

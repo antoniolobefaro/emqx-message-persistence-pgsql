@@ -47,6 +47,7 @@ start(_StartType, _StartArgs) ->
         ok = emqx_message_persistence_acl_pgsql:register_metrics(),
         ok = emqx:hook('client.check_acl', fun emqx_message_persistence_acl_pgsql:check_acl/5, [#{acl_query => AclQuery}])
     end),
+    ok = emqx:hook('message.publish', fun emqx_message_persistence_pgsql:on_message_publish/2, [application:get_all_env()]),
     {ok, Sup}.
 
 stop(_State) ->

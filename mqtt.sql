@@ -12,7 +12,7 @@ CREATE TABLE messages (
   t8 character varying(50),
   t9 character varying(50),
   payload character varying(200),
-  from character varying(200),
+  da character varying(200),
   flag character varying(200),
   topic character varying(200),
   qos integer,

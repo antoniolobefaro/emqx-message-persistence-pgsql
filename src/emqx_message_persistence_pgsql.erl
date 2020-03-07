@@ -97,10 +97,10 @@ on_message_publish(Message = #message{topic = <<"$SYS/", _/binary>>}, _Env) ->
 
 on_message_publish(Message, _Env) ->
     io:format("Publish ~s~n", [emqx_message:format(Message)]),
-    Id = case is_binary(Message#message.id) of
-        true -> binary:list_to_bin(integer_to_list(binary:decode_unsigned(Message#message.id)));
-        false -> <<"">>
-    end,
+%%    Id = case is_binary(Message#message.id) of
+%%        true -> binary:list_to_bin(integer_to_list(binary:decode_unsigned(Message#message.id)));
+%%        false -> <<"">>
+%%    end,
     Topics = string:split(Message#message.topic, "/", all),
     Topicsfree = lists:delete("",Topics),
     Topicsfreeall = lists:delete(<<>>,Topicsfree),

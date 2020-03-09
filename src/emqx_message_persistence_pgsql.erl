@@ -38,7 +38,8 @@ register_metrics() ->
 
 %% Called when the plugin application start
 load(Env) ->
-  emqx:hook('message.publish', fun ?MODULE:on_message_publish/2, [Env]).
+    io:format("load start "),
+    emqx:hook('message.publish', fun ?MODULE:on_message_publish/2, [Env]).
 
 %%--------------------------------------------------------------------
 %% Auth Module Callbacks

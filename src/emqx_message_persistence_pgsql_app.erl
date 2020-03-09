@@ -32,6 +32,7 @@
 %%--------------------------------------------------------------------
 
 start(_StartType, _StartArgs) ->
+    io:format("app start "),
     {ok, Sup} = emqx_message_persistence_pgsql_sup:start_link(),
     emqx_message_persistence_pgsql:load(application:get_all_env()),
     if_enabled(auth_query, fun(AuthQuery) ->

@@ -21,7 +21,10 @@
 -include_lib("emqx/include/emqx.hrl").
 -include_lib("emqx/include/logger.hrl").
 
--export([ register_metrics/0, check/3, description/0]).
+-export([ register_metrics/0
+        , check/3
+        , description/0
+        ]).
 -export([on_message_publish/2]).
 
 %% Called when the plugin application start

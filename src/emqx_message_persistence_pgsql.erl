@@ -27,11 +27,18 @@
         ]).
 -export([on_message_publish/2]).
 
+-export([load/1, unload/0]).
+
 %% Called when the plugin application start
 
 -spec(register_metrics() -> ok).
 register_metrics() ->
     lists:foreach(fun emqx_metrics:new/1, ?AUTH_METRICS).
+
+
+%% Called when the plugin application start
+load(Env) ->
+  emqx:hook('message.publish', fun ?MODULE:on_message_publish/2, [Env]).
 
 %%--------------------------------------------------------------------
 %% Auth Module Callbacks
@@ -147,5 +154,10 @@ check_if_exist(Ind, Lista) ->
     Length < Ind  -> ""
   end.
 
-description() -> "Authentication with PostgreSQL".
+
+%% Called when the plugin application stop
+unload() ->
+    emqx:unhook('message.publish', fun ?MODULE:on_message_publish/2).
+
+description() -> "Message Persistence PostgreSQL Module".
 

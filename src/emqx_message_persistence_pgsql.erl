@@ -131,10 +131,10 @@ on_message_publish(Message, _Env) ->
 %%    <<"timestamp">> => integer_to_binary(calendar:datetime_to_gregorian_seconds(calendar:now_to_universal_time(Message#message.timestamp))),
     Ts = Message#message.timestamp,             
 %%    Status = "publish",
-    if 
-        is_number(Payload) -> { Val, rest } = string:to_float(Payload);
-        true -> Val = "NULL"
-    end,
+%%    if 
+%%        is_number(Payload) -> { Val, rest } = string:to_float(Payload);
+%%        true -> Val = "NULL"
+%%    end,
     Sql = "INSERT INTO messages (t1,t2,t3,t4,t5,t6,t7,t8,t9, ts, payload,topic,da,qos,flag) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)",
     io:format("Sql ~s~n", [Sql]),
     Params = [T1,T2,T3,T4,T5,T6,T7,T8,T9, Ts, Payload, Topic, From, Qos, Flags],

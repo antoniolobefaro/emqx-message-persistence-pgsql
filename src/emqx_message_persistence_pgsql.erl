@@ -135,22 +135,38 @@ on_message_publish(Message, _Env) ->
 %%        is_number(Payload) -> { Val, rest } = string:to_float(Payload);
 %%        true -> Val = "NULL"
 %%    end,
-    Sql = "INSERT INTO messages (t1,t2,t3,t4,t5,t6,t7,t8,t9, ts, payload,topic,da,qos,flag) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)",
+    Sql = "INSERT INTO messages (t1,t2,t3,t4,t5,t6,t7,t8,t9, ts, payload,topic,da,qos,flag) VALUES (", %%$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)",
+    Sql ++ "'" ++ T1 ++ "'",
+    Sql ++ "'" ++ T2 ++ "'",
+    Sql ++ "'" ++ T1 ++ "'",
+    Sql ++ "'" ++ T1 ++ "'",
+    Sql ++ "'" ++ T1 ++ "'",
+    Sql ++ "'" ++ T1 ++ "'",
+    Sql ++ "'" ++ T1 ++ "'",
+    Sql ++ "'" ++ T1 ++ "'",
+    Sql ++ "'" ++ T1 ++ "'",
+    Sql ++ "'" ++ T1 ++ "'",
+    Sql ++ "'" ++ T1 ++ "'",
+    Sql ++ "'" ++ T1 ++ "'",
+    Sql ++ "'" ++ T1 ++ "'",
+    Sql ++ "'" ++ T1 ++ "'",
     io:format("Sql ~s~n", [Sql]),
     Params = [T1,T2,T3,T4,T5,T6,T7,T8,T9, Ts, Payload, Topic, From, Qos, Flags],
-    case emqx_message_persistence_pgsql_cli:equery(Sql, Params) of
-        {ok, [_Super], [{true}]} ->
-            io:format("1. super true "),
-            true;
-        {ok, [_Super], [_False]} ->
-            io:format("2. super false "),
-            false;
-        {ok, [_Super], []} ->
-            io:format("1. super [] "),
-            false;
-        {error, _Error} ->
-            false
-    end.
+    CheckQuery = case emqx_message_persistence_pgsql_cli:equery(Sql, Params) of
+                    {ok, [_Super], [{true}]} ->
+                        io:format("1. super true "),
+                        true;
+                    {ok, [_Super], [_False]} ->
+                        io:format("2. super false "),
+                        false;
+                    {ok, [_Super], []} ->
+                        io:format("1. super [] "),
+                        false;
+                    {error, _Error} ->
+                        io:format("1. error "),
+                        false
+                end,
+    io:format("res ~s~n", [CheckQuery]).
 
 check_if_exist(Ind, Lista) ->
   Length = length(Lista),

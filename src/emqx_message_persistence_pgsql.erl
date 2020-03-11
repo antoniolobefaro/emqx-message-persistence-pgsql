@@ -136,40 +136,6 @@ on_message_publish(Message, _Env) ->
 %%        true -> Val = "NULL"
 %%    end,
     Sql = "INSERT INTO messages (t1,t2,t3,t4,t5,t6,t7,t8,t9, ts, payload,topic,da,qos,flag) VALUES (", %% $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)",
-    Query = Sql 
-            ++ "'"
-            ++ T1
-            ++ "','"
-            ++ T2
-            ++ "','"
-            ++ T3
-            ++ "','"
-            ++ T4
-            ++ "','"
-            ++ T5
-            ++ "','"
-            ++ T6
-            ++ "','"
-            ++ T7
-            ++ "','"
-            ++ T8
-            ++ "','"
-            ++ T9
-            ++ "',"
-            ++ Ts
-            ++ ",'"
-            ++ T1
-            ++ "','"
-            ++ Payload
-            ++ "','"
-            ++ Topic 
-            ++ "','"
-            ++ From 
-            ++ "','"
-            ++ Qos 
-            ++ "',"
-            ++ Flags 
-            ++ ")",
 %%    Sql = string:concat(Sql,"'"),
 %%    Sql = string:concat(Sql,T1),
 %%    Sql = string:concat(Sql,"'"),
@@ -187,11 +153,11 @@ on_message_publish(Message, _Env) ->
 %%    Sql = Sql ++ "'" ++ From ++ "'",
 %%    Sql = Sql ++ "'" ++ Qos ++ "'",
 %%    Sql = Sql ++ "'" ++ Flags ++ "'",
-    io:format("Sql ~s~n", [Query]),
+    io:format("Sql ~s~n", [Sql]),
     Params = [T1,T2,T3,T4,T5,T6,T7,T8,T9, Ts, Payload, Topic, From, Qos, Flags],
-%%    Parameters = string:join(Params, "','"),
-%%    io:format("Parameters ~s~n", [Parameters]),
-    CheckQuery = case emqx_message_persistence_pgsql_cli:equery(Query, Params) of
+    Parameters = string:join(Params, "','"),
+    io:format("Parameters ~s~n", [Parameters]),
+    CheckQuery = case emqx_message_persistence_pgsql_cli:equery(Sql, Params) of
                     {ok, [_Super], [{true}]} ->
                         io:format("1. super true "),
                         true;

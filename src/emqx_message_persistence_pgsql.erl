@@ -136,9 +136,9 @@ on_message_publish(Message, _Env) ->
 %%        true -> Val = "NULL"
 %%    end,
     Sql = "INSERT INTO messages (t1,t2,t3,t4,t5,t6,t7,t8,t9, ts, payload,topic,da,qos,flag) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)",
-    Sql = string:concat(Sql,"'"),
-    Sql = string:concat(Sql,T1),
-    Sql = string:concat(Sql,"'"),
+%%    Sql = string:concat(Sql,"'"),
+%%    Sql = string:concat(Sql,T1),
+%%    Sql = string:concat(Sql,"'"),
 %%    Sql = Sql ++ "'" ++ T2 ++ "'",
 %%    Sql = Sql ++ "'" ++ T3 ++ "'",
 %%    Sql = Sql ++ "'" ++ T4 ++ "'",

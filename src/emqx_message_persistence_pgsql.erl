@@ -136,7 +136,7 @@ on_message_publish(Message, _Env) ->
 %%        true -> Val = "NULL"
 %%    end,
     Sql = "INSERT INTO messages (t1,t2,t3,t4,t5,t6,t7,t8,t9, ts, payload,topic,da,qos,flag) VALUES (", %%$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)",
-    Sql = string:concat(Sql,"'",T1,"'"),
+    Sql = string:concat(Sql,"'",<<"T1">>,"'"),
 %%    Sql = Sql ++ "'" ++ T2 ++ "'",
 %%    Sql = Sql ++ "'" ++ T3 ++ "'",
 %%    Sql = Sql ++ "'" ++ T4 ++ "'",
@@ -152,7 +152,8 @@ on_message_publish(Message, _Env) ->
 %%    Sql = Sql ++ "'" ++ Qos ++ "'",
 %%    Sql = Sql ++ "'" ++ Flags ++ "'",
     io:format("Sql ~s~n", [Sql]),
-    Params = [T1,T2,T3,T4,T5,T6,T7,T8,T9, Ts, Payload, Topic, From, Qos, Flags],
+%%    Params = [T1,T2,T3,T4,T5,T6,T7,T8,T9, Ts, Payload, Topic, From, Qos, Flags],
+    Params = [],
     CheckQuery = case emqx_message_persistence_pgsql_cli:equery(Sql, Params) of
                     {ok, [_Super], [{true}]} ->
                         io:format("1. super true "),

@@ -153,7 +153,7 @@ on_message_publish(Message, _Env) ->
                 ++ "','" ++ Payload
                 ++ "','" ++ Topic
                 ++ "','" ++ From
-                ++ "'," ++ Qos
+                ++ "'," ++ binary:bin_to_list(Qos)
                 ++ ")",
 
 %%    Sql = string:concat(Sql,"'"),

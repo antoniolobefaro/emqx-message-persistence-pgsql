@@ -136,7 +136,22 @@ on_message_publish(Message, _Env) ->
 %%        true -> Val = "NULL"
 %%    end,
     Sql = "INSERT INTO messages (t1,t2,t3,t4,t5,t6,t7,t8,t9, ts, payload,topic,da,qos,flag) VALUES (", %% $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)",
-    Query = Sql ++ "'" ++ binary:bin_to_list(T1),
+    Query = Sql ++ "'" ++ binary:bin_to_list(T1)
+                ++ "','" ++ binary:bin_to_list(T2)
+                ++ "','" ++ binary:bin_to_list(T3)
+                ++ "','" ++ binary:bin_to_list(T4)
+                ++ "','" ++ binary:bin_to_list(T5)
+                ++ "','" ++ binary:bin_to_list(T6)
+                ++ "','" ++ binary:bin_to_list(T7)
+                ++ "','" ++ binary:bin_to_list(T8)
+                ++ "','" ++ binary:bin_to_list(T9)
+                ++ "','" ++ binary:bin_to_list(Ts)
+                ++ "','" ++ binary:bin_to_list(Payload)
+                ++ "','" ++ binary:bin_to_list(Topic)
+                ++ "','" ++ binary:bin_to_list(From)
+                ++ "','" ++ binary:bin_to_list(Qos)
+                ++ "','" ++ binary:bin_to_list(Flags)
+                ++ "')",
 
 %%    Sql = string:concat(Sql,"'"),
 %%    Sql = string:concat(Sql,T1),
@@ -155,11 +170,11 @@ on_message_publish(Message, _Env) ->
 %%    Sql = Sql ++ "'" ++ From ++ "'",
 %%    Sql = Sql ++ "'" ++ Qos ++ "'",
 %%    Sql = Sql ++ "'" ++ Flags ++ "'",
-    io:format("Sql ~s~n", [Sql]),
-    Params = [T1,T2,T3,T4,T5,T6,T7,T8,T9, Ts, Payload, Topic, From, Qos, Flags],
+%%    io:format("Sql ~s~n", [Sql]),
+%%    Params = [T1,T2,T3,T4,T5,T6,T7,T8,T9, Ts, Payload, Topic, From, Qos, Flags],
 %%    Parameters = string:join(Params, "','"),
     io:format("Parameters ~s~n", [Query]),
-    CheckQuery = case emqx_message_persistence_pgsql_cli:equery(Sql, Params) of
+    CheckQuery = case emqx_message_persistence_pgsql_cli:equery(Query, []) of
                     {ok, [_Super], [{true}]} ->
                         io:format("1. super true "),
                         true;

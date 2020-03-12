@@ -152,7 +152,7 @@ on_message_publish(Message, _Env) ->
                 ++ "','" ++ Ts
                 ++ "','" ++ Payload
                 ++ "','" ++ Topic
-                ++ "','" ++ From
+                ++ "','" ++ binary:bin_to_list(From)
                 ++ "'," ++ binary:bin_to_list(Qos)
                 ++ ")",
 

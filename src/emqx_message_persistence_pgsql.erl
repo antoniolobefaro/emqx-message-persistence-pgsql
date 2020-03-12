@@ -142,15 +142,15 @@ on_message_publish(Message, _Env) ->
 %%        true -> Val = "NULL"
 %%    end,
     Sql = "INSERT INTO messages (t1,t2,t3,t4,t5,t6,t7,t8,t9, ts, payload,topic,da,qos,flag) VALUES (", %% $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)",
-    Query = Sql ++ "'" ++ binary:bin_to_list(T1)
-                ++ "','" ++ binary:bin_to_list(T2)
-                ++ "','" ++ binary:bin_to_list(T3)
-                ++ "','" ++ binary:bin_to_list(T4)
-                ++ "','" ++ binary:bin_to_list(T5)
-                ++ "','" ++ binary:bin_to_list(T6)
-                ++ "','" ++ binary:bin_to_list(T7)
-                ++ "','" ++ binary:bin_to_list(T8)
-                ++ "','" ++ binary:bin_to_list(T9)
+    Query = Sql ++ "'" ++ T1
+                ++ "','" ++ T2
+                ++ "','" ++ T3
+                ++ "','" ++ T4
+                ++ "','" ++ T5
+                ++ "','" ++ T6
+                ++ "','" ++ T7
+                ++ "','" ++ T8
+                ++ "','" ++ T9
                 ++ "','" ++ Ts
                 ++ "','" ++ binary:bin_to_list(Payload)
                 ++ "','" ++ binary:bin_to_list(Topic)
@@ -199,8 +199,8 @@ on_message_publish(Message, _Env) ->
 check_if_exist(Ind, Lista) ->
   Length = length(Lista),
   if 
-    Length >= Ind -> lists:nth(Ind, Lista);
-    Length < Ind  -> <<"">>
+    Length >= Ind -> binary:bin_to_list(lists:nth(Ind, Lista));
+    Length < Ind  -> ""
   end.
 
 

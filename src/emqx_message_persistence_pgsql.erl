@@ -194,7 +194,7 @@ check_if_exist(Ind, Lista) ->
   Length = length(Lista),
   if 
     Length >= Ind -> lists:nth(Ind, Lista);
-    Length < Ind  -> ""
+    Length < Ind  -> <<"">>
   end.
 
 

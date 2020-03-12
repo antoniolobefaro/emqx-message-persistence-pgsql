@@ -129,7 +129,13 @@ on_message_publish(Message, _Env) ->
     T9 = check_if_exist(9,Topicsfreeall),
     Payload = Message#message.payload,
 %%    <<"timestamp">> => integer_to_binary(calendar:datetime_to_gregorian_seconds(calendar:now_to_universal_time(Message#message.timestamp))),
-    Ts = Message#message.timestamp,             
+    Ts = Message#message.timestamp,   
+    io:format("Payload ~s~n", [Payload]),
+    io:format("Ts ~s~n", [Ts]),
+    io:format("Topic ~s~n", [Topic]),
+    io:format("From ~s~n", [From]),
+    io:format("Qos ~s~n", [Qos]),
+    io:format("Flags ~s~n", [Flags]),          
 %%    Status = "publish",
 %%    if 
 %%        is_number(Payload) -> { Val, rest } = string:to_float(Payload);
@@ -145,7 +151,7 @@ on_message_publish(Message, _Env) ->
                 ++ "','" ++ binary:bin_to_list(T7)
                 ++ "','" ++ binary:bin_to_list(T8)
                 ++ "','" ++ binary:bin_to_list(T9)
-                ++ "','" ++ binary:bin_to_list(Ts)
+                ++ "','" ++ Ts
                 ++ "','" ++ binary:bin_to_list(Payload)
                 ++ "','" ++ binary:bin_to_list(Topic)
                 ++ "','" ++ binary:bin_to_list(From)

@@ -131,7 +131,6 @@ on_message_publish(Message, _Env) ->
 %%    <<"timestamp">> => integer_to_binary(calendar:datetime_to_gregorian_seconds(calendar:now_to_universal_time(Message#message.timestamp))),
     Ts = Message#message.timestamp,   
     io:format("Payload ~s~n", [Payload]),
-    io:format("Ts ~s~n", [Ts]),
     io:format("Topic ~s~n", [Topic]),
     io:format("From ~s~n", [From]),
     io:format("Qos ~s~n", [Qos]),

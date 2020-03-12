@@ -133,8 +133,7 @@ on_message_publish(Message, _Env) ->
     io:format("Payload ~s~n", [Payload]),
     io:format("Topic ~s~n", [Topic]),
     io:format("From ~s~n", [From]),
-    io:format("Qos ~s~n", [Qos]),
-    io:format("Flags ~s~n", [Flags]),          
+    io:format("Qos ~s~n", [Qos]),     
 %%    Status = "publish",
 %%    if 
 %%        is_number(Payload) -> { Val, rest } = string:to_float(Payload);
@@ -155,7 +154,7 @@ on_message_publish(Message, _Env) ->
                 ++ "','" ++ binary:bin_to_list(Topic)
                 ++ "','" ++ binary:bin_to_list(From)
                 ++ "','" ++ binary:bin_to_list(Qos)
-                ++ "','" ++ binary:bin_to_list(Flags)
+                ++ "','" ++ Flags
                 ++ "')",
 
 %%    Sql = string:concat(Sql,"'"),

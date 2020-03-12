@@ -26,6 +26,7 @@
 -export([parse_query/2]).
 -export([ equery/2
         , equery/3
+        , equery/1
         ]).
 
 %%--------------------------------------------------------------------
@@ -92,6 +93,9 @@ equery(Sql, Params) ->
 
 equery(Sql, Params, ClientInfo) ->
     ecpool:with_client(?APP, fun(C) -> epgsql:prepared_query(C, Sql, replvar(Params, ClientInfo)) end).
+
+equery(Sql) ->
+    ecpool:with_client(?APP, fun(C) -> epgsql:squery(C, Sql) end).
 
 replvar(Params, ClientInfo) ->
     replvar(Params, ClientInfo, []).

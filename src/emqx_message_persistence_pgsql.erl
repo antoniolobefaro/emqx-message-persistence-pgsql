@@ -150,7 +150,7 @@ on_message_publish(Message, _Env) ->
                 ++ "','" ++ T7
                 ++ "','" ++ T8
                 ++ "','" ++ T9
-                ++ "','" ++ Ts
+                ++ "','" ++ integer_to_list(Ts)
                 ++ "','" ++ binary:bin_to_list(Payload)
                 ++ "','" ++ binary:bin_to_list(Topic)
                 ++ "','" ++ binary:bin_to_list(From)

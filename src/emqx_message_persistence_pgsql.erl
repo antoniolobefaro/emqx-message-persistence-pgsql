@@ -177,22 +177,11 @@ on_message_publish(Message, _Env) ->
 %%    io:format("Sql ~s~n", [Sql]),
 %%    Params = [T1,T2,T3,T4,T5,T6,T7,T8,T9, integer_to_list(Ts), binary:bin_to_list(Payload), binary:bin_to_list(Topic), binary:bin_to_list(From), binary:bin_to_list(Qos)],
 %%    Parameters = string:join(Params, "','"),
-    io:format("Parameters ~s~n", [Sql]),
-    CheckQuery = case emqx_message_persistence_pgsql_cli:equery(Query) of
-                    {ok, [_Super], [{true}]} ->
-                        io:format("1. super true "),
-                        true;
-                    {ok, [_Super], [_False]} ->
-                        io:format("2. super false "),
-                        false;
-                    {ok, [_Super], []} ->
-                        io:format("1. super [] "),
-                        false;
-                    {error, _Error} ->
-                        io:format("1. error "),
-                        false
-                end,
-    io:format("res ~s~n", [CheckQuery]).
+    io:format("Parameters ~s~n", [Query]),
+    CheckQuery = emqx_message_persistence_pgsql_cli:equery(Query),
+    receive
+        {C, CheckQuery, Result} -> Result
+    end.
 
 check_if_exist(Ind, Lista) ->
   Length = length(Lista),

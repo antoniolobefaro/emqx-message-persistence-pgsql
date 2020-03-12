@@ -139,7 +139,7 @@ on_message_publish(Message, _Env) ->
 %%        is_number(Payload) -> { Val, rest } = string:to_float(Payload);
 %%        true -> Val = "NULL"
 %%    end,
-    Sql = "INSERT INTO messages (t1,t2,t3,t4,t5,t6,t7,t8,t9, ts, payload,topic,da,qos,flag) VALUES (", %% $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)",
+    Sql = "INSERT INTO messages (t1,t2,t3,t4,t5,t6,t7,t8,t9, ts, payload,topic,da,qos) VALUES (", %% $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)",
     Query = Sql ++ "'" ++ T1
                 ++ "','" ++ T2
                 ++ "','" ++ T3
@@ -150,12 +150,11 @@ on_message_publish(Message, _Env) ->
                 ++ "','" ++ T8
                 ++ "','" ++ T9
                 ++ "','" ++ Ts
-                ++ "','" ++ binary:bin_to_list(Payload)
-                ++ "','" ++ binary:bin_to_list(Topic)
-                ++ "','" ++ binary:bin_to_list(From)
-                ++ "','" ++ binary:bin_to_list(Qos)
-                ++ "','" ++ Flags
-                ++ "')",
+                ++ "','" ++ Payload
+                ++ "','" ++ Topic
+                ++ "','" ++ From
+                ++ "'," ++ Qos
+                ++ ")",
 
 %%    Sql = string:concat(Sql,"'"),
 %%    Sql = string:concat(Sql,T1),

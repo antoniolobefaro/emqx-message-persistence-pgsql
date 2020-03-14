@@ -1,2 +1,120 @@
 %%-*- mode: erlang -*-
 %% emqx_message_persistence_pgsql config mapping
+
+{mapping, "auth.message.server", "emqx_message_persistence_pgsql.server", [
+  {default, {"127.0.0.1", 5432}},
+  {datatype, [integer, ip, string]}
+]}.
+
+{mapping, "auth.message.pool", "emqx_message_persistence_pgsql.server", [
+  {default, 8},
+  {datatype, integer}
+]}.
+
+{mapping, "auth.message.database", "emqx_message_persistence_pgsql.server", [
+  {datatype, string}
+]}.
+
+{mapping, "auth.message.username", "emqx_message_persistence_pgsql.server", [
+  {default, ""},
+  {datatype, string}
+]}.
+
+{mapping, "auth.message.password", "emqx_message_persistence_pgsql.server", [
+  {default, ""},
+  {datatype, string}
+]}.
+
+{mapping, "auth.message.encoding", "emqx_message_persistence_pgsql.server", [
+  {default, utf8},
+  {datatype, atom}
+]}.
+
+{mapping, "auth.message.ssl", "emqx_message_persistence_pgsql.server", [
+  {default, false},
+  {datatype, {enum, [true, false]}}
+]}.
+
+{mapping, "auth.message.ssl_opts.keyfile", "emqx_message_persistence_pgsql.server", [
+  {datatype, string}
+]}.
+
+{mapping, "auth.message.ssl_opts.certfile", "emqx_message_persistence_pgsql.server", [
+  {datatype, string}
+]}.
+
+{mapping, "auth.message.ssl_opts.cacertfile", "emqx_message_persistence_pgsql.server", [
+  {datatype, string}
+]}.
+
+{translation, "emqx_message_persistence_pgsql.server", fun(Conf) ->
+  {PgHost, PgPort} =
+  case cuttlefish:conf_get("auth.message.server", Conf) of
+    {Ip, Port} -> {Ip, Port};
+    S          -> case string:tokens(S, ":") of
+                    [Domain]       -> {Domain, 5432};
+                    [Domain, Port] -> {Domain, list_to_integer(Port)}
+                  end
+    end,
+  Pool = cuttlefish:conf_get("auth.message.pool", Conf),
+  Username = cuttlefish:conf_get("auth.message.username", Conf),
+  Passwd = cuttlefish:conf_get("auth.message.password", Conf, ""),
+  DB = cuttlefish:conf_get("auth.message.database", Conf),
+  Encoding = cuttlefish:conf_get("auth.message.encoding", Conf),
+  Ssl = cuttlefish:conf_get("auth.message.ssl", Conf),
+
+  Filter  = fun(Opts) -> [{K, V} || {K, V} <- Opts, V =/= undefined] end,
+  SslOpts = fun(Prefix) ->
+                Filter([{keyfile,    cuttlefish:conf_get(Prefix ++ ".keyfile", Conf, undefined)},
+                        {certfile,   cuttlefish:conf_get(Prefix ++ ".certfile", Conf, undefined)},
+                        {cacertfile, cuttlefish:conf_get(Prefix ++ ".cacertfile", Conf, undefined)}])
+            end,
+  [{pool_size, Pool},
+   {auto_reconnect, 1},
+   {host, PgHost},
+   {port, PgPort},
+   {username, Username},
+   {password, Passwd},
+   {database, DB},
+   {encoding, Encoding},
+   {ssl, Ssl},
+   {ssl_opts, SslOpts("auth.message.ssl_opts")}]
+end}.
+
+{mapping, "auth.message.auth_query", "emqx_message_persistence_pgsql.auth_query", [
+  {datatype, string}
+]}.
+
+{mapping, "auth.message.password_hash", "emqx_message_persistence_pgsql.password_hash", [
+  {datatype, string}
+]}.
+
+{mapping, "auth.message.pbkdf2_macfun", "emqx_message_persistence_pgsql.pbkdf2_macfun", [
+  {datatype, atom}
+]}.
+
+{mapping, "auth.message.pbkdf2_iterations", "emqx_message_persistence_pgsql.pbkdf2_iterations", [
+  {datatype, integer}
+]}.
+
+{mapping, "auth.message.pbkdf2_dklen", "emqx_message_persistence_pgsql.pbkdf2_dklen", [
+  {datatype, integer}
+]}.
+
+{mapping, "auth.message.super_query", "emqx_message_persistence_pgsql.super_query", [
+  {datatype, string}
+]}.
+
+{mapping, "auth.message.acl_query", "emqx_message_persistence_pgsql.acl_query", [
+  {datatype, string}
+]}.
+
+{translation, "emqx_message_persistence_pgsql.password_hash", fun(Conf) ->
+  HashValue = cuttlefish:conf_get("auth.message.password_hash", Conf),
+  case string:tokens(HashValue, ",") of
+    [Hash]           -> list_to_atom(Hash);
+    [Prefix, Suffix] -> {list_to_atom(Prefix), list_to_atom(Suffix)};
+    [Hash, MacFun, Iterations, Dklen] -> {list_to_atom(Hash), list_to_atom(MacFun), list_to_integer(Iterations), list_to_integer(Dklen)};
+    _                -> plain
+  end
+end}.

@@ -95,29 +95,30 @@ equery(Sql, Params, ClientInfo) ->
     ecpool:with_client(?APP, fun(C) -> epgsql:prepared_query(C, Sql, replvar(Params, ClientInfo)) end).
 
 equery(Sql) ->
-    ecpool:with_client(?APP, fun(C) -> 
-        Ref = epgsql:squery(C, Sql),
-        receive
-            {C, Ref, {columns, Columns}} ->
-                %% columns description
-                Columns;
-            {C, Ref, {data, Row}} ->
-                %% single data row
-                Row;
-            {C, Ref, {error, _E} = Error} ->
-                Error;
-            {C, Ref, {complete, {_Type, Count}}} ->
-                %% execution of one insert/update/delete has finished
-                {ok, Count}; % affected rows count
-            {C, Ref, {complete, _Type}} ->
-                %% execution of one select has finished
-                ok;
-            {C, Ref, done} ->
-                %% execution of all queries from Sql has been finished
-                done
-        end
-        
-    end).
+    ecpool:with_client(?APP, fun(C) -> epgsql:squery(C, Sql) end).
+%%    ecpool:with_client(?APP, fun(C) -> 
+%%        Ref = epgsql:squery(C, Sql),
+%%        receive
+%%            {C, Ref, {columns, Columns}} ->
+%%                %% columns description
+%%                Columns;
+%%            {C, Ref, {data, Row}} ->
+%%                %% single data row
+%%                Row;
+%%            {C, Ref, {error, _E} = Error} ->
+%%                Error;
+%%            {C, Ref, {complete, {_Type, Count}}} ->
+%%                %% execution of one insert/update/delete has finished
+%%                {ok, Count}; % affected rows count
+%%            {C, Ref, {complete, _Type}} ->
+%%                %% execution of one select has finished
+%%                ok;
+%%            {C, Ref, done} ->
+%%                %% execution of all queries from Sql has been finished
+%%                done
+%%        end
+%%        
+%%    end).
 
 replvar(Params, ClientInfo) ->
     replvar(Params, ClientInfo, []).
